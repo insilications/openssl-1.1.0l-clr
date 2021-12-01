@@ -553,6 +553,7 @@ my $rdop = shift;
 
 &hidden("OPENSSL_cpuid_setup");
 &hidden("OPENSSL_ia32cap_P");
+&hidden("OPENSSL_ia32_cpuid");
 
 &asm_finish();
 
