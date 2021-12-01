@@ -7,6 +7,7 @@
  * https://www.openssl.org/source/license.html
  */
 
+#include <unistd.h>
 #include <stdio.h>
 #include <ctype.h>
 #include <openssl/crypto.h>
@@ -492,12 +493,16 @@ char *CONF_get1_default_config_file(void)
     if (file == NULL)
         return NULL;
     OPENSSL_strlcpy(file, X509_get_default_cert_area(), len + 1);
+    if (access(file, R_OK) == 0)
+        return file;
 #ifndef OPENSSL_SYS_VMS
     OPENSSL_strlcat(file, "/", len + 1);
 #endif
     OPENSSL_strlcat(file, OPENSSL_CONF, len + 1);
 
-    return file;
+    OPENSSL_free(file);
+
+    return OPENSSL_strdup("/usr/share/defaults/ssl/openssl.cnf");
 }
 
 /*
